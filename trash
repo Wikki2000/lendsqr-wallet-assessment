@@ -1,0 +1,6 @@
+npm install knex mysql2 dotenv
+npm install -D @types/node
+npm install --save-dev @types/dotenv
+npm install uuid
+
+
