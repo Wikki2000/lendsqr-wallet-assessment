@@ -127,7 +127,7 @@ chmod +x scripts/fund.sh
 
 ---
 ## 🗂️ Folder Structure
-
+```bash
 src/
 ├── app.ts
 ├── server.ts
@@ -140,7 +140,7 @@ src/
 ├── utils/
 ├── tests/
 └── scripts/
-
+```
 ---
 ## 🔐 Security
 
