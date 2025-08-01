@@ -1,19 +1,41 @@
 import { BaseModel } from '../models/BaseModel';
-import { generateToken } from '../utils/jwt.utils';
 import { v4 as uuidv4 } from 'uuid';
-import type { User } from '../models/types/User';
+import type { Wallet } from '../models/types/Wallet';
+import type { Transaction } from '../models/types/Transaction';
 
-// Create an instance of BaseModel for the 'users' table
-const walletModel = new BaseModel<User>('users');
 
-export const fundWalletService = async (userId: number, amount: number) => {
-	  const wallet = await db('wallets').where({ user_id: userId }).first();
+const walletModel = new BaseModel<Wallet>('wallets');
+const transactionModel = new BaseModel<Transaction>('transactions');
 
-	    if (!wallet) throw new Error('Wallet not found');
+export const fundWalletService = async (
+  userId: string,
+  amount: number,
+  idempotencyKey: string
+) => {
+  const wallet: Wallet = await walletModel.getBy({ userId });
+  if (!wallet) throw new Error('Wallet not found');
 
-	      const newBalance = Number(wallet.balance) + Number(amount);
+  // Check if a transaction with this idempotency key already exists
+  const existing = await transactionModel.getBy({ idempotencyKey });
+  if (existing) {
+    return { balance: Number(wallet.balance), message: 'Duplicate transaction ignored' };
+  }
 
-	        await db('wallets').where({ user_id: userId }).update({ balance: newBalance });
+  const newBalance = Number(wallet.balance) + Number(amount);
 
-		  return { balance: newBalance };
+  // Update wallet balance
+  await walletModel.updateBy('id', wallet.id, { balance: newBalance });
+
+  // Add transaction with idempotency key
+  await transactionModel.add({
+    id: uuidv4(),
+    walletId: wallet.id,
+    type: 'fund',
+    amount,
+    recipientId: wallet.userId,
+    description: 'Wallet funded',
+    idempotencyKey,
+  });
+
+  return { balance: newBalance };
 };

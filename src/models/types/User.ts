@@ -10,5 +10,6 @@ export interface User {
   password: string;
   phone: string;
   createdAt?: Date;
+  updatedAt?: Date;
 }
 

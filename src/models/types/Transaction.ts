@@ -3,10 +3,11 @@
  */
 export interface Transaction {
   id: string;
-  userId: string;
-  type: 'fund' | 'transfer' | 'withdraw'; // Example enum values
+  walletId: string;
+  type: 'fund' | 'transfer' | 'withdraw';
   amount: number;
   recipientId: string;
+  idempotencyKey?: string;
   description: string;
   createdAt?: Date;
   updatedAt?: Date;
