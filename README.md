@@ -103,6 +103,8 @@ npx knex migrate:latest
 # 6. Start the app
 npm run dev
 
+---
+
 ## 🧪 Testing
 
 Run all unit tests:
@@ -120,6 +122,7 @@ For manual testing using bash:
 ```bash
 chmod +x scripts/fund.sh
 ./scripts/fund.sh
+
 ---
 ## 🗂️ Folder Structure
 
