@@ -1,5 +1,3 @@
-import { BaseModel } from '../BaseModel';
-
 /**
  * Schema interface for a User.
  */
@@ -9,6 +7,7 @@ export interface User {
   lastName: string;
   userName: string;
   email: string;
+  password: string;
   phone: string;
   createdAt?: Date;
 }
