@@ -4,7 +4,7 @@
 export interface Transaction {
   id: string;
   walletId: string;
-  type: 'fund' | 'transfer' | 'withdraw';
+  type: 'fund' | 'transfer' | 'withdraw' | 'debit' | 'credit';
   amount: number;
   recipientId: string;
   idempotencyKey?: string;

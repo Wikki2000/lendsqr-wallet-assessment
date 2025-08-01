@@ -1,4 +1,8 @@
-import { fundWalletService, withdrawWalletService } from '../../services/wallet.service';
+import {
+  fundWalletService,
+  withdrawWalletService,
+  transferFundsService,
+} from '../../services/wallet.service';
 import db from '../../db/knex';
 import type { User } from '../../models/types/User';
 import type { Wallet } from '../../models/types/Wallet';
@@ -11,10 +15,13 @@ describe('WalletService - fundWalletService', () => {
   const amount = 500;
   const userAccount = '12345678910';
 
-  beforeAll(async () => {
-    //await db.migrate.latest();
+  let recipientId: string = 'recipient-user-id';
+  let recipientWalletId: string = 'recipient-wallet-id';
+  const recipientEmail = 'recipient@example.com';
+  const recipientAccount = '22222222222';
 
-    // Create test user
+  beforeAll(async () => {
+    // Sender setup
     await db('users').insert({
       id: testUserId,
       email: testEmail,
@@ -25,24 +32,38 @@ describe('WalletService - fundWalletService', () => {
       phone: '0000000000',
     });
 
-    // Create wallet for the user
     await db('wallets').insert({
       id: testWalletId,
       accountNumber: userAccount,
       userId: testUserId,
-      //balance: 0,
+    });
+
+    // Recipient setup
+    await db('users').insert({
+      id: recipientId,
+      email: recipientEmail,
+      userName: 'recipientUser',
+      firstName: 'Receiver',
+      lastName: 'User',
+      password: '54321',
+      phone: '1111111111',
+    });
+
+    await db('wallets').insert({
+      id: recipientWalletId,
+      accountNumber: recipientAccount,
+      userId: recipientId,
     });
   });
 
   afterAll(async () => {
-    await db('transactions').where({ walletId: testWalletId }).delete();
-    await db('wallets').where({ id: testWalletId }).delete();
-    await db('users').where({ id: testUserId }).delete();
+    await db('transactions').whereIn('walletId', [testWalletId, recipientWalletId]).delete();
+    await db('wallets').whereIn('id', [testWalletId, recipientWalletId]).delete();
+    await db('users').whereIn('id', [testUserId, recipientId]).delete();
     await db.destroy();
   });
 
   test('should fund wallet', async () => {
-    // First fund attempt
     const result1 = await fundWalletService(testUserId, amount, idempotencyKey);
     expect(result1.balance).toBe(500);
   });
@@ -60,6 +81,41 @@ describe('WalletService - fundWalletService', () => {
     await expect(
       withdrawWalletService(testUserId, withdrawAmount, withdrawKey)
     ).rejects.toThrow('Insufficient funds');
+  });
+
+  // Transfer Fund
+  test('should transfer funds to another user', async () => {
+    // First fund the sender wallet again
+    const fundAgainKey = `fund-${Date.now()}`;
+    await fundWalletService(testUserId, 200, fundAgainKey);
+
+    const result = await transferFundsService(testUserId, recipientAccount, 100);
+
+    expect(result.message).toContain('Successfully transferred ₦100');
+
+    const senderWallet = await db('wallets').where({ id: testWalletId }).first();
+    const recipientWallet = await db('wallets').where({ id: recipientWalletId }).first();
+
+    expect(Number(senderWallet.balance)).toBe(400); // 500 - 100
+    expect(Number(recipientWallet.balance)).toBe(100); // 0 + 100
+  });
+
+  test('should not transfer if insufficient balance', async () => {
+    await expect(
+      transferFundsService(testUserId, recipientAccount, 9999)
+    ).rejects.toThrow('Insufficient balance');
+  });
+
+  test('should not transfer to invalid account', async () => {
+    await expect(
+      transferFundsService(testUserId, '99999999999', 100)
+    ).rejects.toThrow('Invalid recipient');
+  });
+
+  test('should not transfer to self', async () => {
+    await expect(
+      transferFundsService(testUserId, userAccount, 100)
+    ).rejects.toThrow('Invalid recipient');
   });
 });
 

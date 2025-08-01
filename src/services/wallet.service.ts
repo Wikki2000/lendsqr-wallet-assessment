@@ -4,6 +4,7 @@ import type { Wallet } from '../models/types/Wallet';
 import type { Transaction } from '../models/types/Transaction';
 
 
+//const userModal = new BaseModel<User>('users');
 const walletModel = new BaseModel<Wallet>('wallets');
 const transactionModel = new BaseModel<Transaction>('transactions');
 
@@ -14,13 +15,6 @@ export const fundWalletService = async (
 ) => {
   const wallet: Wallet = await walletModel.getBy({ userId });
   if (!wallet) throw new Error('Wallet not found');
-
-  // Check if a transaction with this idempotency key already exists
-  /*
-     const existing = await transactionModel.getBy({ idempotencyKey });
-     if (existing) {
-     return { balance: Number(wallet.balance), message: 'Duplicate transaction ignored' };
-     }*/
 
   const newBalance = Number(wallet.balance) + Number(amount);
 
@@ -74,3 +68,50 @@ export const withdrawWalletService = async (
   return { balance: newBalance };
 };
 
+
+export const transferFundsService = async (
+  senderId: string,
+  recipientAccount: string,
+  amount: number
+) => {
+  const senderWallet = await walletModel.getBy({ userId: senderId });
+  if (!senderWallet || senderWallet.balance < amount) {
+    throw new Error('Insufficient balance');
+  }
+
+  const recipientWallet = await walletModel.getBy({ accountNumber: recipientAccount });
+  if (!recipientWallet || recipientWallet.userId === senderId) {
+    throw new Error('Invalid recipient');
+  }
+
+  // Begin transfer
+  await walletModel.updateBy('userId', senderId, {
+    balance: Number(senderWallet.balance) - amount
+  });
+
+
+  await walletModel.updateBy('userId', recipientWallet.userId, {
+    balance: Number(recipientWallet.balance) + amount
+  });
+
+  // Record both transactions
+  await transactionModel.add({
+    id: uuidv4(),
+    walletId: senderWallet.id,
+    type: 'debit',
+    amount,
+    description: `Transfer to ${recipientWallet.accountNumber}`
+  });
+
+  await transactionModel.add({
+    id: uuidv4(),
+    walletId: recipientWallet.id,
+    type: 'credit',
+    amount,
+    description: `Received from ${senderId}`
+  });
+
+  return {
+    message: `Successfully transferred ₦${amount.toLocaleString()} to ${recipientAccount}`
+  };
+};

@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<void> {
     .references('id')
     .inTable('wallets')
     .onDelete('CASCADE');
-    table.enum('type', ['fund', 'withdraw', 'transfer']).notNullable();
+    table.enum('type', ['fund', 'withdraw', 'transfer', 'debit', 'credit']).notNullable();
     table.string('idempotencyKey').unique().nullable();
     table.decimal('amount', 12, 2).notNullable();
     table.uuid('recipientId')
