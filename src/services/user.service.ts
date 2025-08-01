@@ -1,11 +1,13 @@
 import { BaseModel } from '../models/BaseModel';
 import { hashPassword, checkPassword } from '../utils/password.utils';
-import { generateToken } from '../utils/jwt.utils';
+import { generateToken }  from '../utils/jwt.utils';
 import { v4 as uuidv4 } from 'uuid';
 import type { User } from '../models/types/User';
+import type { Wallet } from '../models/types/Wallet';
 
-// Create an instance of BaseModel for the 'users' table
+// BaseModel instances
 const userModel = new BaseModel<User>('users');
+const walletModel = new BaseModel<Wallet>('wallets');
 
 export async function createUser(data: Partial<User>): Promise<string> {
   try {
@@ -17,6 +19,13 @@ export async function createUser(data: Partial<User>): Promise<string> {
     }
     data.password = await hashPassword(data.password);
     await userModel.add(data);
+
+    // Create user wallet.
+    await walletModel.add({
+      id: uuidv4(),
+      userId: data.id
+    });
+
     return data.id;
   } catch (error: any) {
     if (error.code === 'ER_DUP_ENTRY') {

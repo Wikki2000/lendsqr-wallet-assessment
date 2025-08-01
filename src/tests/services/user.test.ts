@@ -7,7 +7,7 @@ describe('UserService', () => {
   const testEmail = 'jest-user@example.com';
 
   beforeAll(async () => {
-    await db.migrate.latest();
+    //await db.migrate.latest();
   });
 
   afterAll(async () => {
@@ -22,6 +22,7 @@ describe('UserService', () => {
       userName: 'jestUser',
       firstName: 'Jest',
       lastName: 'Tester',
+      password: '12345',
       phone: '1234567890',
     };
 
@@ -36,6 +37,7 @@ describe('UserService', () => {
       userName: 'duplicateUser',
       firstName: 'Jest',
       lastName: 'Tester',
+      password: '12345',
       phone: '0987654321',
     };
 

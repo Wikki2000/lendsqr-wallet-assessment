@@ -16,10 +16,11 @@ export const fundWalletService = async (
   if (!wallet) throw new Error('Wallet not found');
 
   // Check if a transaction with this idempotency key already exists
+  /*
   const existing = await transactionModel.getBy({ idempotencyKey });
   if (existing) {
     return { balance: Number(wallet.balance), message: 'Duplicate transaction ignored' };
-  }
+  }*/
 
   const newBalance = Number(wallet.balance) + Number(amount);
 
