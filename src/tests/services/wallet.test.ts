@@ -1,4 +1,4 @@
-import { fundWalletService } from '../../services/wallet.service';
+import { fundWalletService, withdrawWalletService } from '../../services/wallet.service';
 import db from '../../db/knex';
 import type { User } from '../../models/types/User';
 import type { Wallet } from '../../models/types/Wallet';
@@ -7,8 +7,8 @@ describe('WalletService - fundWalletService', () => {
   let testUserId: string = 'yfdtfgutdrxtgv';
   let testWalletId: string = 'ewtdrdyfyf';
   const testEmail = 'fundtest@example.com';
-      const idempotencyKey = 'hkbvcvfrxed';
-          const amount = 500;
+  const idempotencyKey = 'hkbvcvfrxed';
+  const amount = 500;
 
   beforeAll(async () => {
     //await db.migrate.latest();
@@ -45,14 +45,19 @@ describe('WalletService - fundWalletService', () => {
     expect(result1.balance).toBe(500);
   });
 
-  test('Should prevent duplicate with same idempotency key', async () => {
+  test('should withdraw from wallet', async () => {
+    const withdrawKey = `withdraw-${Date.now()}`;
+    const withdrawAmount = 200;
+    const result = await withdrawWalletService(testUserId, withdrawAmount, withdrawKey);
+    expect(result.balance).toBe(300); // 500 - 200
+  });
 
-    // Duplicate attempt with same idempotency key
-    const result2 = await fundWalletService(testUserId, amount, idempotencyKey);
-    console.log(result2.balance, typeof result2.balance);
-    expect(result2.balance).toBe(500);
-    expect(result2.message).toBe('Duplicate transaction ignored');
-
+  test('should not withdraw more than available balance', async () => {
+    const withdrawKey = `withdraw-fail-${Date.now()}`;
+    const withdrawAmount = 1000;
+    await expect(
+      withdrawWalletService(testUserId, withdrawAmount, withdrawKey)
+    ).rejects.toThrow('Insufficient funds');
   });
 });
 

@@ -17,10 +17,10 @@ export const fundWalletService = async (
 
   // Check if a transaction with this idempotency key already exists
   /*
-  const existing = await transactionModel.getBy({ idempotencyKey });
-  if (existing) {
-    return { balance: Number(wallet.balance), message: 'Duplicate transaction ignored' };
-  }*/
+     const existing = await transactionModel.getBy({ idempotencyKey });
+     if (existing) {
+     return { balance: Number(wallet.balance), message: 'Duplicate transaction ignored' };
+     }*/
 
   const newBalance = Number(wallet.balance) + Number(amount);
 
@@ -40,3 +40,37 @@ export const fundWalletService = async (
 
   return { balance: newBalance };
 };
+
+
+export const withdrawWalletService = async (
+  userId: string,
+  amount: number,
+  idempotencyKey: string
+) => {
+  const wallet: Wallet = await walletModel.getBy({ userId });
+  if (!wallet) throw new Error('Wallet not found');
+
+  const currentBalance = Number(wallet.balance);
+  if (currentBalance < amount) {
+    throw new Error('Insufficient funds');
+  }
+
+  const newBalance = currentBalance - amount;
+
+  // Update wallet balance
+  await walletModel.updateBy('id', wallet.id, { balance: newBalance });
+
+  // Add transaction
+  await transactionModel.add({
+    id: uuidv4(),
+    walletId: wallet.id,
+    type: 'withdraw',
+    amount,
+    recipientId: wallet.userId,
+    description: 'Wallet withdrawal',
+    idempotencyKey,
+  });
+
+  return { balance: newBalance };
+};
+
