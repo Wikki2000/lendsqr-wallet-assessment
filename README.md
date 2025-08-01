@@ -111,6 +111,8 @@ Run all unit tests:
 npm test
 ```
 
+---
+
 ## 🧾 Bash Scripts
 
 For manual testing using bash:
@@ -118,7 +120,7 @@ For manual testing using bash:
 ```bash
 chmod +x scripts/fund.sh
 ./scripts/fund.sh
-
+---
 ## 🗂️ Folder Structure
 
 src/
@@ -134,19 +136,12 @@ src/
 ├── tests/
 └── scripts/
 
+---
 ## 🔐 Security
 
 - Passwords are securely hashed using **bcrypt**
 - JWT authentication is required for all protected routes
 - Idempotency key support for wallet funding
 - Input validation is implemented at the controller level
-
-## 🧬 ER Diagram
-
-Below is the database entity relationship diagram:
-
-![ER Diagram](assets/er-diagram.png)
-
-> 📁 _Ensure the image is correctly placed in the `assets/` folder of your repository._
 
 
