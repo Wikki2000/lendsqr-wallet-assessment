@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import {
-  fundWalletService, withdrawWalletService 
+  fundWalletService, withdrawWalletService, transferFundsService
 } from '../services/wallet.service';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import { isMissingFields, isValidAmount } from '../utils/validate.utils';
@@ -27,7 +27,7 @@ export const fundWallet = async (req: AuthRequest, res: Response) => {
 
     const { valid, message } = isValidAmount(amount);
     if (!valid) {
-        return res.status(400).json({ message });
+      return res.status(400).json({ message });
     }
 
     const userId = req.user?.id;
@@ -65,7 +65,7 @@ export const withdrawWallet = async (req: AuthRequest, res: Response) => {
 
     const { valid, message } = isValidAmount(amount);
     if (!valid) {
-        return res.status(400).json({ message });
+      return res.status(400).json({ message });
     }
 
     const userId = req.user?.id;
@@ -78,6 +78,36 @@ export const withdrawWallet = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({ message: 'Failed to withdraw', error: message });
+  }
+};
+
+
+export const transferFunds = async (req: AuthRequest, res: Response) => {
+  try {
+    const requiredFields = ['recipientAccount', 'amount'];
+    const data = req.body;
+
+    const missingField = isMissingFields(requiredFields, data);
+    if (missingField) {
+      return res.status(400).json({ message: `${missingField} is required` });
+    }
+
+    const senderId = req.user?.id; // from JWT middleware
+
+    if (!senderId) {
+        return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+
+    const { recipientAccount, amount } = data;
+
+    const result = await transferFundsService(senderId, recipientAccount, Number(amount));
+
+    return res.status(200).json({
+      message: result.message
+    });
+
+  } catch (err: any) {
+    return res.status(400).json({ message: err.message });
   }
 };
 
