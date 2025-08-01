@@ -9,6 +9,7 @@ describe('WalletService - fundWalletService', () => {
   const testEmail = 'fundtest@example.com';
   const idempotencyKey = 'hkbvcvfrxed';
   const amount = 500;
+  const userAccount = '12345678910';
 
   beforeAll(async () => {
     //await db.migrate.latest();
@@ -27,6 +28,7 @@ describe('WalletService - fundWalletService', () => {
     // Create wallet for the user
     await db('wallets').insert({
       id: testWalletId,
+      accountNumber: userAccount,
       userId: testUserId,
       //balance: 0,
     });

@@ -9,7 +9,14 @@ import type { Wallet } from '../models/types/Wallet';
 const userModel = new BaseModel<User>('users');
 const walletModel = new BaseModel<Wallet>('wallets');
 
+
 export async function createUser(data: Partial<User>): Promise<string> {
+  function generateAccountNumber(): string {
+    const randomPart = Math.floor(10000000 + Math.random() * 90000000);
+    return '100' + randomPart.toString();
+  }
+
+
   try {
     if (!data.id) {
       data.id = uuidv4();
@@ -20,10 +27,20 @@ export async function createUser(data: Partial<User>): Promise<string> {
     data.password = await hashPassword(data.password);
     await userModel.add(data);
 
+    let accountNumber: string;
+    let exists: boolean;
+
+    // Ensure no user get same account number.
+    do {
+      accountNumber = generateAccountNumber();
+      exists = await walletModel.getBy({ accountNumber });
+    } while (exists);
+
     // Create user wallet.
     await walletModel.add({
       id: uuidv4(),
-      userId: data.id
+      userId: data.id,
+      accountNumber
     });
 
     return data.id;
