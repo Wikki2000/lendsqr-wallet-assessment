@@ -11,13 +11,14 @@ A secure and scalable digital wallet backend built with **Node.js**, **TypeScrip
 - [Tech Stack](#tech-stack)
 - [Database Design](#database-design)
   - [ER Diagram](#er-diagram)
-  - [Schema Overview](#schema-overview)
 - [API Endpoints](#api-endpoints)
 - [Installation & Setup](#installation--setup)
 - [Testing](#testing)
+- [Bash Scripts](#bash-scripts)
 - [Folder Structure](#folder-structure)
 - [Security](#security)
 - [License](#license)
+
 
 ---
 
@@ -59,10 +60,6 @@ This project serves as the core wallet infrastructure for a fintech system. User
 ### ER Diagram
 
 ![ER Diagram](./path/to/your-er-diagram.png)
-
-# 💼 Lendsqr Wallet API (Node.js + TypeScript)
-
-A simple wallet service built with Node.js, TypeScript, Express, and MySQL. Users can register, log in, fund their wallets, withdraw, and transfer funds securely. Built as part of an MVP assessment.
 
 ---
 
