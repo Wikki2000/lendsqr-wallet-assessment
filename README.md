@@ -121,8 +121,7 @@ npm test
 For manual testing using bash:
 
 ```bash
-chmod +x scripts/fund.sh
-./scripts/fund.sh
+chmod +x scripts/create-user.sh
 ```
 
 ---
