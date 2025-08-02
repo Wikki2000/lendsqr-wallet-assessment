@@ -151,6 +151,7 @@
   },
   "scripts": {
     "start": "node dist/server.ts",
+    "heroku-postbuild": "npm run build",
     "build": "tsc",
     "dev": "ts-node-dev src/server.ts",
     "test": "jest",
