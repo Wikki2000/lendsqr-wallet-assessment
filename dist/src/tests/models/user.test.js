@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const knex_1 = __importDefault(require("../../db/knex"));
+const BaseModel_1 = require("../../models/BaseModel");
+const userModal = new BaseModel_1.BaseModel('users');
 describe('UserModel', () => {
     const testEmail = 'jest-test@example.com';
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,25 +28,24 @@ describe('UserModel', () => {
     }));
     test('should add a new user', () => __awaiter(void 0, void 0, void 0, function* () {
         // Add user
-        const [id] = yield User_1.User.add({
+        const [id] = yield userModal.add({
             email: testEmail,
             firstName: 'John',
             lastName: 'Doe',
             userName: 'test',
             phone: '1234567890',
         });
-        console.log(id);
         expect(typeof id).toBe('number');
     }));
     test('should fetch user by parameters', () => __awaiter(void 0, void 0, void 0, function* () {
-        const user = yield User_1.User.getBy({ email: testEmail });
+        const user = yield userModal.getBy({ email: testEmail });
         expect(user).toBeDefined();
         expect(user.firstName).toBe('John');
         expect(user.lastName).toBe('Doe');
         expect(user.email).toBe(testEmail);
     }));
     test('should return undefined for non-existing user', () => __awaiter(void 0, void 0, void 0, function* () {
-        const user = yield User_1.User.getBy({ email: 'notfound@example.com' });
+        const user = yield userModal.getBy({ email: 'notfound@example.com' });
         expect(user).toBeUndefined();
     }));
 });

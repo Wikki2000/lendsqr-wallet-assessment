@@ -1,7 +1,9 @@
 import db from '../../db/knex';
-import { User } from '../../models/types/User';
+import type { User } from '../../models/types/User';
+import { BaseModel } from '../../models/BaseModel';
 
 
+const userModal = new BaseModel<User>('users');
 describe('UserModel', () => {
   const testEmail = 'jest-test@example.com';
 
@@ -18,20 +20,19 @@ describe('UserModel', () => {
 
   test('should add a new user', async () => {
     // Add user
-    const [id] = await User.add({
+    const [id] = await userModal.add({
       email: testEmail,
       firstName: 'John',
       lastName: 'Doe',
       userName: 'test',
       phone: '1234567890',
     });
-    console.log(id);
 
     expect(typeof id).toBe('number');
   });
 
   test('should fetch user by parameters', async () => {
-    const user = await User.getBy({ email: testEmail });
+    const user = await userModal.getBy({ email: testEmail });
     expect(user).toBeDefined();
 
     expect(user.firstName).toBe('John');
@@ -40,7 +41,7 @@ describe('UserModel', () => {
   });
 
   test('should return undefined for non-existing user', async () => {
-    const user = await User.getBy({ email: 'notfound@example.com' });
+    const user = await userModal.getBy({ email: 'notfound@example.com' });
     expect(user).toBeUndefined();
   });
 

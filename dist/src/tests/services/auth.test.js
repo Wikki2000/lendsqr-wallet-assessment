@@ -38,19 +38,19 @@ describe('AuthUser Service', () => {
         yield knex_1.default.destroy();
     }));
     test('should authenticate using userName', () => __awaiter(void 0, void 0, void 0, function* () {
-        const result = yield (0, user_service_1.authUser)({ userName: testUserName, password: testPassword });
+        const result = yield (0, user_service_1.loginUser)({ userName: testUserName, password: testPassword });
         expect(result).toBeTruthy();
     }));
     test('should authenticate using email', () => __awaiter(void 0, void 0, void 0, function* () {
-        const result = yield (0, user_service_1.authUser)({ email: testEmail, password: testPassword });
+        const result = yield (0, user_service_1.loginUser)({ email: testEmail, password: testPassword });
         expect(result).toBeTruthy();
     }));
     test('should fail with wrong password', () => __awaiter(void 0, void 0, void 0, function* () {
-        const result = yield (0, user_service_1.authUser)({ email: testEmail, password: 'WrongPass123!' });
+        const result = yield (0, user_service_1.loginUser)({ email: testEmail, password: 'WrongPass123!' });
         expect(result).toBeFalsy();
     }));
     test('should fail with unknown user', () => __awaiter(void 0, void 0, void 0, function* () {
-        const result = yield (0, user_service_1.authUser)({ email: 'unknown@example.com', password: testPassword });
+        const result = yield (0, user_service_1.loginUser)({ email: 'unknown@example.com', password: testPassword });
         expect(result).toBeFalsy();
     }));
 });
