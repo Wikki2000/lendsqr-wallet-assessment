@@ -10,4 +10,12 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', loginRoutes);
 app.use('/api/wallet', walletRoutes);
 
+// 404 handler
+app.use((req, res, next) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'The requested URL was not found on this server.'
+  });
+});
+
 export default app;

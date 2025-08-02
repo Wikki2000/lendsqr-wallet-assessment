@@ -16,7 +16,6 @@ export async function createUser(data: Partial<User>): Promise<string> {
     return '100' + randomPart.toString();
   }
 
-
   try {
     if (!data.id) {
       data.id = uuidv4();
