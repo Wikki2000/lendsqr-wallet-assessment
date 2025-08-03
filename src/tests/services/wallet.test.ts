@@ -91,7 +91,7 @@ describe('WalletService - fundWalletService', () => {
 
     const result = await transferFundsService(testUserId, recipientAccount, 100);
 
-    expect(result.message).toContain('Successfully transferred ₦100');
+    expect(result.message).toContain('Successfully transferred N100');
 
     const senderWallet = await db('wallets').where({ id: testWalletId }).first();
     const recipientWallet = await db('wallets').where({ id: recipientWalletId }).first();

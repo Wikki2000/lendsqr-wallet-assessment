@@ -2,6 +2,9 @@ export function isMissingFields(
   requiredFields: string[],
   data: Record<string, any>
 ): string | null {
+  if (!requiredFields || !data) {
+    return null;
+  }
   for (const field of requiredFields) {
     if (!data[field]) {
       return capitalize(field);

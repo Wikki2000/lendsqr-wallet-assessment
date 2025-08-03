@@ -44,7 +44,6 @@ export const createNewUser = async (req: Request, res: Response) => {
 
     } catch (error: unknown) {
       const err = error as Error;
-      console.error('Karma API error:', error);
       return res.status(502).json({ message: 'Failed to verify user with Karma API' });
     }
 
@@ -59,7 +58,7 @@ export const createNewUser = async (req: Request, res: Response) => {
       email, firstName, lastName, phone, userName, password
     });
 
-    return res.status(201).json({
+    return res.status(200).json({
       message: 'User created successfully',
       user_id: userId,
     });

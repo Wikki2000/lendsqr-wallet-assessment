@@ -1,6 +1,7 @@
 import db from '../../db/knex';
 import type { User } from '../../models/types/User';
 import { BaseModel } from '../../models/BaseModel';
+import { v4 as uuidv4 } from 'uuid';
 
 
 const userModal = new BaseModel<User>('users');
@@ -21,11 +22,13 @@ describe('UserModel', () => {
   test('should add a new user', async () => {
     // Add user
     const [id] = await userModal.add({
+      id: uuidv4(),
       email: testEmail,
       firstName: 'John',
       lastName: 'Doe',
       userName: 'test',
       phone: '1234567890',
+      password: "12345aA@",
     });
 
     expect(typeof id).toBe('number');
