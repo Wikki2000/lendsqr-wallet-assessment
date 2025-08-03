@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
     .inTable('wallets')
     .onDelete('CASCADE');
     table.enum('type', ['fund', 'withdraw', 'transfer', 'debit', 'credit']).notNullable();
-    table.string('idempotencyKey').unique().nullable();
+    table.string('idempotencyKey').unique().notNullable();
     table.decimal('amount', 12, 2).notNullable();
     table.uuid('recipientId')
     .nullable()

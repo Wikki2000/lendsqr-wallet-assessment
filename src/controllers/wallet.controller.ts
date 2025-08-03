@@ -48,6 +48,7 @@ export const withdrawWallet = async (req: AuthRequest, res: Response) => {
   try {
     const requiredFields = ['amount', 'idempotencyKey'];
     const data: Record<string, any> = req.body;
+
     const missingValue = isMissingFields(requiredFields, data);
 
     if (missingValue) {
