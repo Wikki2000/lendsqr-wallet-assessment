@@ -1,18 +1,23 @@
 import { Request, Response } from 'express';
 import { loginUser } from '../services/user.service';
-import { isMissingFields } from '../utils/validate.utils';
 
 export const login = async (req: Request, res: Response) => {
-    const requiredFields: string[] = ['password'];
-    const data: Record<string, any> = req.body;
-    const missingValue: string | null = isMissingFields(requiredFields, data);
+  const { email, userName, password } = req.body;
 
-    if (missingValue) {
-      return res.status(400).json({ message: `${missingValue} is required` });
-    }
+  if (!email && !userName) {
+    return res.status(400).json({ message: 'Email or userName is required' });
+  }
+
+  if (!password) {
+    return res.status(400).json({ message: 'Password is required' });
+  }
+
+  const data = email
+    ? { email, password }
+    : { userName, password };
 
   try {
-    const token = await loginUser(req.body);
+    const token: string | null = await loginUser(data);
     if (!token) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -21,3 +26,4 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Login failed', error: err.message });
   }
 };
+

@@ -53,21 +53,15 @@ export async function createUser(data: Partial<User>): Promise<string> {
 
 
 export async function loginUser(data: Partial<User>): Promise<string | null> {
-  const { password, userName, email } = data;
 
-  if (!password || (!userName && !email)) {
-    throw new Error('Username/email and password are required');
-  }
-
-  let user: User | undefined;
-  if (email) user = await userModel.getBy({ email });
-  if (!user && userName) user = await userModel.getBy({ userName });
-
-  if (!user || !(await checkPassword(password, user.password))) {
+  // Lookup user by email or userName only
+  const { password, ...query } = data;
+  const user: User | undefined = await userModel.getBy(query);
+  if (!user || !(await checkPassword(data.password as string, user.password))) {
     return null;
   }
 
-  // Omit password
+  // Omit password from token payload
   const { password: _pw, ...userData } = user;
   return generateToken(userData);
 }
