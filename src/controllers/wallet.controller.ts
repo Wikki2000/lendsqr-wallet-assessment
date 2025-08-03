@@ -95,7 +95,7 @@ export const transferFunds = async (req: AuthRequest, res: Response) => {
     const senderId = req.user?.id; // from JWT middleware
 
     if (!senderId) {
-        return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
     }
 
     const { recipientAccount, amount } = data;
@@ -107,7 +107,16 @@ export const transferFunds = async (req: AuthRequest, res: Response) => {
     });
 
   } catch (err: any) {
-    return res.status(400).json({ message: err.message });
+    if (err.message === 'Invalid recipient') {
+      return res.status(400).json({
+        message:  'Invalid recipient account number or self-transfer is not allowed.'
+      });
+    } else if (err.message === 'Wallet Not Found') {
+      return res.status(404).json({
+        message: 'The wallet associated with this account number could not be found.'
+      });
+
+    }
+    return res.status(500).json({ message: err.message });
   }
 };
-

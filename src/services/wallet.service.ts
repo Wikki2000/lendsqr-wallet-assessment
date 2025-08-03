@@ -80,8 +80,19 @@ export const transferFundsService = async (
   }
 
   const recipientWallet = await walletModel.getBy({ accountNumber: recipientAccount });
-  if (!recipientWallet || recipientWallet.userId === senderId) {
+
+  // Handle error for invalid account number
+  if (
+    recipientWallet?.userId === senderId ||
+    recipientAccount.length !== 11 ||
+  !/^\d{11}$/.test(recipientAccount)
+  ) {
     throw new Error('Invalid recipient');
+  }
+
+  // Handle error for missing wallets.
+  if (!recipientWallet) {
+    throw new Error('Wallet Not Found');
   }
 
   // Begin transfer
