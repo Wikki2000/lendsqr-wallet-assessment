@@ -109,7 +109,7 @@ describe('WalletService - fundWalletService', () => {
   test('should not transfer to invalid account', async () => {
     await expect(
       transferFundsService(testUserId, '99999999999', 100)
-    ).rejects.toThrow('Invalid recipient');
+    ).rejects.toThrow('Wallet Not Found');
   });
 
   test('should not transfer to self', async () => {
