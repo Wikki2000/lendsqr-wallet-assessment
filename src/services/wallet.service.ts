@@ -112,6 +112,6 @@ export const transferFundsService = async (
   });
 
   return {
-    message: `Successfully transferred ₦${amount.toLocaleString()} to ${recipientAccount}`
+    message: `Successfully transferred N${amount.toLocaleString()} to ${recipientAccount}`
   };
 };
