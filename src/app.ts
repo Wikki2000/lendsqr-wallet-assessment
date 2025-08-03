@@ -3,6 +3,7 @@ import authRoutes from './routes/auth.routes';
 import walletRoutes from './routes/wallet.routes';
 
 const app = express();
+app.use(express.json());  // Parse incoming JSON
 
 app.use(express.json());
 app.use('/api/account', authRoutes);
