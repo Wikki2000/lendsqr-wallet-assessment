@@ -57,9 +57,7 @@ This project serves as the core wallet infrastructure for a fintech system. User
 ---
 
 ## 🧩 Database Design
-### ER Diagram
-
-![](./docs/er-diagram.png)
+![ER Diagram](./docs/er-diagram.png)
 
 ---
 
