@@ -26,8 +26,14 @@ describe('UserService', () => {
       phone: '1234567890',
     };
 
-    const userDict: object = await createUser(user);
-    expect(typeof userDict).toBe('object');
+    const userResponse = await createUser(user);
+
+    expect(userResponse).toHaveProperty('userId');
+    expect(userResponse).toHaveProperty('wallet');
+    expect(typeof userResponse.userId).toBe('string');
+    expect(typeof userResponse.wallet).toBe('object');
+    expect(userResponse.wallet).toHaveProperty('accountNumber');
+    expect(userResponse.wallet).toHaveProperty('walletId');
   });
 
   test('should not allow duplicate email', async () => {
