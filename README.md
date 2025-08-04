@@ -59,7 +59,7 @@ This project serves as the core wallet infrastructure for a fintech system. User
 ## 🧩 Database Design
 ### ER Diagram
 
-![ER Diagram](./docs/er-diagram.png)
+![ER Diagram](https://raw.githubusercontent.com/Wikki2000/lendsqr-wallet-assessment/main/docs/er-diagram.png)
 
 ---
 
