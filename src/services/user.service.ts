@@ -9,8 +9,16 @@ import type { Wallet } from '../models/types/Wallet';
 const userModel = new BaseModel<User>('users');
 const walletModel = new BaseModel<Wallet>('wallets');
 
+type CreateUserResponse = {
+  userId: string;
+  wallet: {
+    accountNumber: string;
+    walletId: string;
+  };
+};
 
-export async function createUser(data: Partial<User>): Promise<string> {
+
+export async function createUser(data: Partial<User>): Promise<CreateUserResponse> {
   function generateAccountNumber(): string {
     const randomPart = Math.floor(10000000 + Math.random() * 90000000);
     return '100' + randomPart.toString();
@@ -36,13 +44,20 @@ export async function createUser(data: Partial<User>): Promise<string> {
     } while (exists);
 
     // Create user wallet.
+    const walletId: string = uuidv4();
     await walletModel.add({
-      id: uuidv4(),
+      id: walletId,
       userId: data.id,
       accountNumber
     });
 
-    return data.id;
+    return {
+      userId: data.id,
+      wallet: {
+        accountNumber,
+        walletId
+      }
+    }
   } catch (error: any) {
     if (error.code === 'ER_DUP_ENTRY') {
       throw new Error('User already exists');

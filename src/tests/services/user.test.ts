@@ -26,8 +26,8 @@ describe('UserService', () => {
       phone: '1234567890',
     };
 
-    const userId = await createUser(user);
-    expect(typeof userId).toBe('string');
+    const userDict: object = await createUser(user);
+    expect(typeof userDict).toBe('object');
   });
 
   test('should not allow duplicate email', async () => {

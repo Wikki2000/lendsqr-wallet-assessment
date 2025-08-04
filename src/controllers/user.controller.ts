@@ -57,13 +57,19 @@ message: 'User is blacklisted in the Lendsqr Karma database and cannot be onboar
     }
 
     // Create user
-    const userId = await createUser({
+    const response = await createUser({
       email, firstName, lastName, phone, userName, password
     });
 
     return res.status(200).json({
       message: 'User created successfully',
-      user_id: userId,
+      data: {
+        userId: response.userId,
+        wallet: {
+          accountNumber: response.wallet.accountNumber,
+          walletId: response.wallet.walletId
+        }
+      }
     });
 
   } catch (error: any) {
