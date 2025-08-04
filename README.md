@@ -59,7 +59,7 @@ This project serves as the core wallet infrastructure for a fintech system. User
 ## 🧩 Database Design
 ### ER Diagram
 
-![ER Diagram](./docs/er-diagram.png)
+![](./docs/er-diagram.png)
 
 ---
 
@@ -67,12 +67,11 @@ This project serves as the core wallet infrastructure for a fintech system. User
 
 | Method | Endpoint              | Description                       |
 |--------|-----------------------|-----------------------------------|
-| POST   | `/api/auth/register`  | Register new user                 |
-| POST   | `/api/auth/login`     | Login and receive JWT             |
+| POST   | `/api/account/register`  | Register new user                 |
+| POST   | `/api/account/login`     | Login and receive JWT             |
 | POST   | `/api/wallet/fund`    | Fund user wallet                  |
 | POST   | `/api/wallet/withdraw`| Withdraw from wallet              |
 | POST   | `/api/wallet/transfer`| Transfer to another account       |
-| GET    | `/api/user/profile`   | Authenticated user details        |
 
 > ℹ️ All wallet routes are protected and require a **Bearer JWT token**.
 
