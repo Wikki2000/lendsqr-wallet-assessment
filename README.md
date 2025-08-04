@@ -60,6 +60,9 @@ This project serves as the core wallet infrastructure for a fintech system. User
 ### ER Diagram
 
 ![ER Diagram](https://wiventory.com/static/er-diagram.png)
+<p align="center">
+  <img src="https://wiventory.com/static/er-diagram.png" alt="ER Diagram" width="600"/>
+</p>
 
 ---
 
