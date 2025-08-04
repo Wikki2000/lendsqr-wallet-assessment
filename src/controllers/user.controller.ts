@@ -8,6 +8,9 @@ const KARMA_API_URL = 'https://adjutor.lendsqr.com/v2/verification/karma/';
 const KARMA_API_KEY = process.env.KARMA_API_KEY!;
 
 export const createNewUser = async (req: Request, res: Response) => {
+  if (!req.body) {
+    return res.status(400).json({ message: 'Empty request body is not allowed' });
+  }
   try {
     const requiredFields: string[] = [
       'email', 'firstName', 'lastName', 'phone', 'userName', 'password'
@@ -36,11 +39,11 @@ export const createNewUser = async (req: Request, res: Response) => {
       };
 
       /*
-      if (kamData.data?.karma_type) {
-        return res.status(403).json({
-          message: 'User is blacklisted in the Lendsqr Karma database and cannot be onboarded.',
-        });
-      }*/
+         if (kamData.data?.karma_type) {
+         return res.status(403).json({
+message: 'User is blacklisted in the Lendsqr Karma database and cannot be onboarded.',
+});
+}*/
 
     } catch (error: unknown) {
       const err = error as Error;

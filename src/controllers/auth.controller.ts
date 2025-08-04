@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import { loginUser } from '../services/user.service';
 
 export const login = async (req: Request, res: Response) => {
+  if (!req.body) {
+    return res.status(400).json({ message: 'Empty request body is not allowed' });
+  }
   const { email, userName, password } = req.body;
 
   if (!email && !userName) {

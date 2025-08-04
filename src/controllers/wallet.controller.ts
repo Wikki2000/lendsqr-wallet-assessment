@@ -7,6 +7,9 @@ import { isMissingFields, isValidAmount } from '../utils/validate.utils';
 import { isDuplicateTransaction } from '../utils/idempotency.utils';
 
 export const fundWallet = async (req: AuthRequest, res: Response) => {
+  if (!req.body) {
+    return res.status(400).json({ message: 'Empty request body is not allowed' });
+  }
   try {
     const requiredFields: string[] = ['amount', 'idempotencyKey'];
     const data: Record<string, any> = req.body;
@@ -45,6 +48,9 @@ export const fundWallet = async (req: AuthRequest, res: Response) => {
 
 
 export const withdrawWallet = async (req: AuthRequest, res: Response) => {
+  if (!req.body) {
+    return res.status(400).json({ message: 'Empty request body is not allowed' });
+  }
   try {
     const requiredFields = ['amount', 'idempotencyKey'];
     const data: Record<string, any> = req.body;
@@ -84,6 +90,9 @@ export const withdrawWallet = async (req: AuthRequest, res: Response) => {
 
 
 export const transferFunds = async (req: AuthRequest, res: Response) => {
+  if (!req.body) {
+    return res.status(400).json({ message: 'Empty request body is not allowed' });
+  }
   try {
     const requiredFields = ['recipientAccount', 'amount'];
     const data = req.body;
