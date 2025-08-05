@@ -79,7 +79,8 @@ This project serves as the core wallet infrastructure for a fintech system. User
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/yourusername/lendsqr-wallet.git
+git clone https://github.com/wikki2000/lendsqr-wallet-ad
+assessment.git
 
 # 2. Navigate into project
 cd lendsqr-wallet
@@ -141,5 +142,3 @@ src/
 - JWT authentication is required for all protected routes
 - Idempotency key support for wallet funding
 - Input validation is implemented at the controller level
-
-
