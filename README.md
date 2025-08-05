@@ -17,8 +17,6 @@ A secure and scalable digital wallet backend built with **Node.js**, **TypeScrip
 - [Bash Scripts](#bash-scripts)
 - [Folder Structure](#folder-structure)
 - [Security](#security)
-- [License](#license)
-
 
 ---
 
